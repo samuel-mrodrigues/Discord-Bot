@@ -1,15 +1,23 @@
-import {Bot} from "./bot/bot.js"
-import {Intent} from "./bot/bot_intents.js"
 
-new Bot("aaaaaaaaaaaaaaaaa", "sd")
+import { Bot } from "./bot/bot.js"
+import { Intent } from "./bot/intents/bot_intents.js"
+
+let meubot = new Bot("dasssssssssssssss", new Intent({
+    INTENT_GRUPOS: true
+}))
+
+meubot.conectar_bot()
+
+
+
 // // Libs
 // import { WebSocket } from "ws"
 // import axios from "axios"
 
 // /**
-//  * 
-//  * @param {string || object} msg 
-//  * @param {logs_tipos} tipo 
+//  *
+//  * @param {string || object} msg
+//  * @param {logs_tipos} tipo
 //  */
 // function log(msg, tipo) {
 //     if (typeof msg == 'string') {
