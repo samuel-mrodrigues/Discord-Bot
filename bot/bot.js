@@ -16,7 +16,8 @@ import {
 }
     from "./opcodes/opcodes.js"
 import { EVENTOS } from "./eventos/eventos.js"
-import ServicoModulo from "./modulos/Modulos.js"
+
+import Servicos from "./servicos/Servicos.js"
 
 export class Bot {
 
@@ -62,7 +63,7 @@ export class Bot {
 
     /**
      * Modulo de serviço que registra todas as funções do bot
-     * @type {ServicoModulo}
+     * @type {Servicos}
      */
     #servico_modulo;
 
@@ -86,7 +87,7 @@ export class Bot {
         this.#token_secreto = token
         this.#intents = intent
 
-        this.#servico_modulo = new ServicoModulo(this)
+        this.#servico_modulo = new Servicos(this)
     }
 
     /**
@@ -104,10 +105,17 @@ export class Bot {
     }
 
     /**
-     * Retorna os modulos para interagir com o BOT
+    * Retorna o token secreto do BOT
+    */
+    get_token() {
+        return this.#token_secreto
+    }
+
+    /**
+     * Retorna os serviços para interagir com o BOT
      * Modulos fornecem todas as funções necessaria para as interações de texto, voz, administrar usuarios, etc...
      */
-    get_modulos() {
+    get_servicos() {
         return this.#servico_modulo
     }
 
@@ -116,11 +124,15 @@ export class Bot {
      * @returns {Promise<{autenticado: boolean, erro: string}>} Retorna true ou false se a conexão foi sucedida
      */
     async conectar_bot() {
+
+        // Estado autenticado como true representa que o bot esta conectado e pronto para enviar e receber informações
         let status_retorno = {
             autenticado: false,
             erro: ""
         }
 
+        // Registra o status da tentativa de conexão atual
+        // O parametro ok é apenas para saber se já pode retornar a promise com a resposta pra quem invocou a função
         let status_conexao = {
             taskid_verificar: 0,
             token_incorreto: false,
@@ -129,16 +141,17 @@ export class Bot {
             checagens_atual: 0
         }
 
-        if (this.#bot_conexao_status.estados.conectado) {
+        if (this.#bot_conexao_status.estados.conectado && this.#bot_conexao_status.estados.reconectando == false) {
             this.#log(`Ignorando tentativa de conexão pois o BOT já esta conectado!`);
             return;
         }
 
         return new Promise((resolve, reject) => {
 
-            // A função abaixo espera até 10 segundos para confirmar se o bot esta autenticado ou não
+            // A função abaixo retorna se o bot esta conectado e autenticado
             // A partir do momento que ele for autenticado, a função retorna um ok imediatamente apos a verificação
-            // Caso contrario, tentara 1 vez por segundo, e se chegar ao limite de 10 sem conectar, retorna um falso e o motivo do erro
+            // Caso não tenha sucesso, ele tentará novamente 1 vez pelos proximos 5 segundos, caso ainda sem sucesso,
+            // Retornará false e o motivo do erro
             status_conexao.taskid_verificar = setInterval(() => {
                 status_conexao.checagens_atual++
 
@@ -160,7 +173,7 @@ export class Bot {
             }
 
             conexao.onclose = (close) => {
-                // O Discord fecha o WebSocket se o token enviado na identificação for valido
+                // O Discord fecha o WebSocket se o token enviado na identificação for invalido
                 // Por isso, verifico se o close não é pelo motivo de ter enviado um token invalido
                 if (this.#bot_conexao_status.estados.autenticando) {
                     status_retorno.erro = ERROS.ERRO_CONECTAR_VERIFIQUE_TOKEN_BOT
@@ -200,7 +213,7 @@ export class Bot {
         switch (nome_evento) {
             case EVENTOS.READY.nome:
                 let dados_sessao = gateway_msg.get_data()
-                this.#receber_identificacao_ok(dados_sessao)
+                this.#evento_bot_autorizado(dados_sessao)
                 break;
             case EVENTOS.RESUMED.nome:
                 this.#log("Sessão anterior resumida com sucesso!")
@@ -272,6 +285,10 @@ export class Bot {
         this.#bot_conexao.send(JSON.stringify(objeto_id))
     }
 
+    /**
+     * Enviar um paylod OP 6 para resumir uma sessão que foi desconectada
+     * 
+     */
     #enviar_resumirsessao() {
         if (!this.#bot_conexao_status.estados.conectado) {
             log(`Não é possivel resumir sessão, o websocket não esta conectado!`)
@@ -301,15 +318,17 @@ export class Bot {
     }
 
     /**
-     * Função chamada quando é recebido o evento READY to gateway to discord, contendo informações importantes
+     * Função chamada quando é recebido o evento READY do gateway to discord, contendo informações importantes
      */
-    #receber_identificacao_ok(payload_autenticacao) {
+    #evento_bot_autorizado(payload_autenticacao) {
         this.#bot_conexao_status.sessao.id = payload_autenticacao.session_id
         this.#bot_conexao_status.informacoes.botuser_id = payload_autenticacao.user.id
         this.#bot_conexao_status.informacoes.nome_bot = payload_autenticacao.user.username
         this.#bot_conexao_status.estados.autenticado = true
         this.#bot_conexao_status.estados.autenticando = false;
         this.#log(`Confirmação de autenticação recebida! Sessão iniciada com o id ${this.#bot_conexao_status.sessao.id}`)
+
+        this.#servico_modulo.cadastrar_modulos()
     }
 
     /**
