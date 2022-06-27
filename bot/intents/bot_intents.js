@@ -114,7 +114,16 @@ export const TIPOS_INTENTS = {
     Disparado quando o usuario esta digitando para uma mensagem direta
     - TYPING_START
     */
-    INTENT_GRUPOS_MENSAGEM_DIRETA_DIGITANDO: 1 << 14
+    INTENT_GRUPOS_MENSAGEM_DIRETA_DIGITANDO: 1 << 14,
+    /**
+    Por padrão, eventos disparados de mensagens do usuario não irão conter o conteudo do que foi digitado.
+    Esse intent notifica o Discord para mandar também o conteudo das mensagens
+    */
+    INTENT_GRUPOS_RECEBER_MENSAGEM_CONTEUDO: 1 << 15,
+    /**
+    Recebe todos os eventos que o Discord lançar, sem exceções
+    */
+    INTENT_TUDO: -1
 }
 Object.freeze(TIPOS_INTENTS)
 
@@ -132,12 +141,11 @@ export class Intent {
      * @param {TIPOS_INTENTS} intents_desejadas - Eventos que o BOT deverá receber do Discord, selecione a permissão e marque como true
      */
     constructor(intents_desejadas) {
-        for (const intent_nome in intents_desejadas) {
-            this.#lista_de_intents.push({
-                intent: intent_nome,
-                hex: TIPOS_INTENTS[intent_nome]
-            })
+        if (intents_desejadas == null) {
+            return;
         }
+
+        this.adicionar_intent(intents_desejadas)
     }
 
     // Intents adicinados
@@ -161,4 +169,54 @@ export class Intent {
         }
         return total;
     }
+
+    /**
+     * Adiciona uma intent para a lista de intents. 
+     * @param {TIPOS_INTENTS} intent 
+     */
+    adicionar_intent(intent) {
+        for (const intent_nome in intent) {
+
+            if (intent_nome == "INTENT_TUDO") {
+                let todas_as_intents = {}
+
+                for (const intent_nome2 in TIPOS_INTENTS) {
+                    if (intent_nome2 == "INTENT_TUDO") continue;
+
+                    Object.assign(todas_as_intents, {
+                        [intent_nome2]: true
+                    })
+                }
+
+                this.adicionar_intent(todas_as_intents)
+                return;
+            }
+
+            if (this.#lista_de_intents.find((intent_existente) => {
+                if (intent_existente.intent == intent_nome) {
+                    return true;
+                }
+            }) != undefined) continue;
+
+            this.#lista_de_intents.push({
+                intent: intent_nome,
+                hex: TIPOS_INTENTS[intent_nome]
+            })
+        }
+    }
+
+    /**
+     * Remover uma intent da lista de intents
+     * @param {TIPOS_INTENTS} intent 
+     */
+    remover_intent(intent) {
+        for (const intent_nome in intent) {
+            this.#lista_de_intents = this.#lista_de_intents.filter((intent_info) => {
+                if (intent_info.intent != intent_nome) {
+                    return true;
+                }
+            })
+        }
+    }
+
 }
