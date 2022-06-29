@@ -1,5 +1,6 @@
 import { Bot } from "../bot.js"
 import ModuloEnviar from "./enviar/Enviar.js"
+import ModuloReceber from "./receber/Receber.js"
 
 /**
  * Controla todos os eventos de envio e recebimentos do BOT
@@ -22,8 +23,10 @@ export default class ServicoModulo {
      * @type {ModuloEnviar}
      */
     #modulo_enviar;
+
     /**
     * Modulo que cuida de toda a funcionaliade de receber informações(eventos) do Discord
+    * @type {ModuloReceber}
     */
     #modulo_receber;
 
@@ -33,6 +36,9 @@ export default class ServicoModulo {
      */
     constructor(bot_data) {
         this.#bot = bot_data
+
+        this.#modulo_enviar = new ModuloEnviar(this)
+        this.#modulo_receber = new ModuloReceber(this)
     }
 
     /**
@@ -52,20 +58,12 @@ export default class ServicoModulo {
 
     /**
      * 
-     * @returns Retorna o modulo de receber 
+     * @returns {ModuloReceber} Retorna o modulo de receber 
      */
     get_modulo_receber() {
         return this.#modulo_receber
     }
 
-    /**
-     * Inicia o cadastro dos modulos de envio e recebimento do BOT
-     */
-    cadastrar_modulos() {
-        this.log(`Iniciando o serviço de modulos do BOT...`)
-
-        this.#modulo_enviar = new ModuloEnviar(this)
-    }
 
     log(msg) {
         if (!this.#mostrar_logs) return;

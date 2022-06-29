@@ -2,8 +2,6 @@ import { PARAMETROS } from "../../../discord/parametros.js";
 import Servico from "../Servicos.js";
 import Axios from "axios"
 
-import EnviarMensagem from "./modulos/EnviarMensagem/EnviarMensagem.js"
-
 export default class Enviar {
     /**
      * Mostrar logs?
@@ -25,21 +23,12 @@ export default class Enviar {
     //  Abaixo é listado todos os modulos que o enviar será responsavel por tratar
 
     /**
-     * @type {EnviarMensagem}
-     */
-    #enviar_mensagens;
-
-    /**
      * Inicia o modulo de envio do BOT
      * @param {Servico} servico_manager 
      */
     constructor(servico) {
         this.#rest_api_url = PARAMETROS.REST_URL
         this.#servico = servico
-
-        this.log(`Carregando modulos de envio...`)
-        this.#cadastrar_modulos();
-        this.log(`Modulos de envio carregados!`)
     }
 
     /**
@@ -48,22 +37,7 @@ export default class Enviar {
     get_rest_url() {
         return this.#rest_api_url
     }
-
-    /**
-     * Retorna o modulo que é responsavel por enviar mensagens aos canais
-     * @returns {EnviarMensagem}
-     */
-    get_enviar_mensagens() {
-        return this.#enviar_mensagens;
-    }
-
-    /**
-     * Realiza o cadastro de todos os modulos de envio
-     */
-    #cadastrar_modulos() {
-        this.#enviar_mensagens = new EnviarMensagem(this)
-    }
-
+    
     /**
      * Envia uma requisição para o endpoint do Discord
      * @param {{tipo: 'POST' | 'GET', endpoint_nome: string, headers: {'NomeHeader': 'ValorHeader'}, data: {chave: valor},  propriedades: import("axios").AxiosRequestConfig}} parametros_requisição

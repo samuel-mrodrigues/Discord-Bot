@@ -114,6 +114,7 @@ export class Bot {
     /**
      * Retorna os serviços para interagir com o BOT
      * Modulos fornecem todas as funções necessaria para as interações de texto, voz, administrar usuarios, etc...
+     * @returns {Servicos} Servico controlador de envio e recebimento
      */
     get_servicos() {
         return this.#servico_modulo
@@ -211,15 +212,16 @@ export class Bot {
         this.#bot_conexao_status.sequencia = seq_recebida
         this.#log(`Processando Evento: ${nome_evento}, sequencia: ${seq_recebida}`)
         switch (nome_evento) {
-            case EVENTOS.READY.nome:
+            case EVENTOS.READY:
                 let dados_sessao = gateway_msg.get_data()
                 this.#evento_bot_autorizado(dados_sessao)
                 break;
-            case EVENTOS.RESUMED.nome:
+            case EVENTOS.RESUMED:
                 this.#log("Sessão anterior resumida com sucesso!")
                 break
             default:
-                this.#log(`Nenhuma execução atribuida para este evento`)
+                // Notificar o modulo de receber eventos
+                this.#servico_modulo.get_modulo_receber().novo_evento(nome_evento, gateway_msg)
                 break;
         }
     }
@@ -327,8 +329,6 @@ export class Bot {
         this.#bot_conexao_status.estados.autenticado = true
         this.#bot_conexao_status.estados.autenticando = false;
         this.#log(`Confirmação de autenticação recebida! Sessão iniciada com o id ${this.#bot_conexao_status.sessao.id}`)
-
-        this.#servico_modulo.cadastrar_modulos()
     }
 
     /**
