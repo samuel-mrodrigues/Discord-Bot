@@ -19,6 +19,7 @@ import { EVENTOS } from "./eventos/eventos.js"
 
 import Servicos from "./servicos/Servicos.js"
 import Handler from "./servicos/receber/handlers/Handler.js"
+import Modulos from "./modulos/Modulos.js"
 
 export class Bot {
 
@@ -66,7 +67,12 @@ export class Bot {
      * Modulo de serviço que registra todas as funções do bot
      * @type {Servicos}
      */
-    #servico_modulo;
+    #servico;
+
+    /**
+     * Modulo de componentes pre-prontos para uso
+     */
+    #modulos;
 
     // Mostrar logs  no console?
     #mostrar_logs = true;
@@ -88,7 +94,8 @@ export class Bot {
         this.#token_secreto = token
         this.#intents = intent
 
-        this.#servico_modulo = new Servicos(this)
+        this.#servico = new Servicos(this)
+        this.#modulos = new Modulos(this)
     }
 
     /**
@@ -118,7 +125,7 @@ export class Bot {
      * @returns {Servicos} Servico controlador de envio e recebimento
      */
     get_servicos() {
-        return this.#servico_modulo
+        return this.#servico
     }
 
     /**
@@ -126,7 +133,15 @@ export class Bot {
      * @returns {Handler}
      */
     get_handlers() {
-        return this.#servico_modulo.get_modulo_receber().get_handler_manager()
+        return this.#servico.get_servico_receber().get_handler_manager()
+    }
+
+    /**
+     * Retorna o modulo manager que é responsavel pelos modulos pre-prontos, de grupo, voz, etc...
+     * @returns {Modulos}
+     */
+    get_modulos() {
+        return this.#modulos
     }
 
     /**
@@ -230,7 +245,7 @@ export class Bot {
                 break
             default:
                 // Notificar o modulo de receber eventos
-                this.#servico_modulo.get_modulo_receber().novo_evento(nome_evento, gateway_msg)
+                this.#servico.get_servico_receber().novo_evento(nome_evento, gateway_msg)
                 break;
         }
     }

@@ -1,48 +1,48 @@
 import { Bot } from "../bot.js"
-import ModuloEnviar from "./enviar/Enviar.js"
-import ModuloReceber from "./receber/Receber.js"
+import ServicoEnviar from "./enviar/Enviar.js"
+import ServicoReceber from "./receber/Receber.js"
 
 /**
  * Controla todos os eventos de envio e recebimentos do BOT
  */
 
-export default class ServicoModulo {
+export default class Servico {
     /**
-     * Mostrar logs relacionados ao modulo?
+     * Mostrar logs relacionados ao servico?
      */
     #mostrar_logs = true;
 
     /**
-     * Instancia do bot relacionado a esse modulo
+     * Instancia do bot relacionado a esse servico
      * @type {Bot}
      */
     #bot;
 
     /**
-     * Modulo que cuida de toda a funcionaliade de enviar informações ao Discord
-     * @type {ModuloEnviar}
+     * Serviço que cuida de toda a funcionaliade de enviar informações ao Discord
+     * @type {ServicoEnviar}
      */
-    #modulo_enviar;
+    #enviar_eventos;
 
     /**
-    * Modulo que cuida de toda a funcionaliade de receber informações(eventos) do Discord
-    * @type {ModuloReceber}
+    * Serviço que cuida de toda a funcionaliade de receber informações(eventos) do Discord
+    * @type {ServicoReceber}
     */
-    #modulo_receber;
+    #receber_eventos;
 
     /**
-     * Inicia o serviço que cuida dos modulos de enviar e receber
+     * Inicia o serviço que cuida dos serviços de enviar e receber
      * @param {Bot} bot_data 
      */
     constructor(bot_data) {
         this.#bot = bot_data
 
-        this.#modulo_enviar = new ModuloEnviar(this)
-        this.#modulo_receber = new ModuloReceber(this)
+        this.#enviar_eventos = new ServicoEnviar(this)
+        this.#receber_eventos = new ServicoReceber(this)
     }
 
     /**
-     * Retorna o BOT vinculado a esse modulo de serviço
+     * Retorna o BOT vinculado a esse serviço de serviço
      * @returns {Bot}
      */
     get_bot() {
@@ -50,18 +50,18 @@ export default class ServicoModulo {
     }
 
     /**
-     * @returns {ModuloEnviar} Recebe o modulo de enviar
+     * @returns {ServicoEnviar} Recebe o serviço de enviar
      */
-    get_modulo_enviar() {
-        return this.#modulo_enviar
+    get_servico_enviar() {
+        return this.#enviar_eventos
     }
 
     /**
      * 
-     * @returns {ModuloReceber} Retorna o modulo de receber 
+     * @returns {ServicoReceber} Retorna o serviço de receber 
      */
-    get_modulo_receber() {
-        return this.#modulo_receber
+    get_servico_receber() {
+        return this.#receber_eventos
     }
 
 
