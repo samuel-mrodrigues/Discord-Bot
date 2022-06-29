@@ -67,12 +67,27 @@ export default class HandlerEvento {
      * Adiciona uma nova função para ser executada nesse tipo de evento
      * Apos a adição de um novo handler, o contador de ID #id_atual será incrementado!
      * @param {Function} funcao_executar 
+     * @returns {Number} Retorna o ID do handler gerado
      */
     add_handler(funcao_executar) {
         let novo_handler_funcao = new FuncaoHandler(this.#id_atual, funcao_executar)
 
         this.#handlers_lista.push(novo_handler_funcao)
         this.#id_atual++;
+
+        return novo_handler_funcao.get_id();
+    }
+
+    /**
+     * Remove algum handler atribuido a este evento
+     * @param {Number} id 
+     */
+    remove_handler(id) {
+        this.#handlers_lista = this.#handlers_lista.filter(handler => {
+            if (handler.get_id() != id) {
+                return true;
+            }
+        })
     }
 
     /**

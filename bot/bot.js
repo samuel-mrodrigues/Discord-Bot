@@ -18,6 +18,7 @@ import {
 import { EVENTOS } from "./eventos/eventos.js"
 
 import Servicos from "./servicos/Servicos.js"
+import Handler from "./servicos/receber/handlers/Handler.js"
 
 export class Bot {
 
@@ -121,6 +122,14 @@ export class Bot {
     }
 
     /**
+     * Retorna o serviço manager de handlers, que é responsavel por disparar funções quando chegam novos eventos
+     * @returns {Handler}
+     */
+    get_handlers() {
+        return this.#servico_modulo.get_modulo_receber().get_handler_manager()
+    }
+
+    /**
      * Iniciar a tentativa de conectar o BOT aos servidores do Discord
      * @returns {Promise<{autenticado: boolean, erro: string}>} Retorna true ou false se a conexão foi sucedida
      */
@@ -212,11 +221,11 @@ export class Bot {
         this.#bot_conexao_status.sequencia = seq_recebida
         this.#log(`Processando Evento: ${nome_evento}, sequencia: ${seq_recebida}`)
         switch (nome_evento) {
-            case EVENTOS.READY:
+            case EVENTOS.INTERNO.RESUMED:
                 let dados_sessao = gateway_msg.get_data()
                 this.#evento_bot_autorizado(dados_sessao)
                 break;
-            case EVENTOS.RESUMED:
+            case EVENTOS.INTERNO.RESUMED:
                 this.#log("Sessão anterior resumida com sucesso!")
                 break
             default:

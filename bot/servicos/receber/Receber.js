@@ -45,6 +45,8 @@ export default class ReceberEvento {
      */
     novo_evento(evento_tipo, gateway_mensagem) {
         this.log(`Novo evento do gateway recebido! ${evento_tipo}`)
+
+        this.#handler.disparar_evento(evento_tipo, gateway_mensagem)
     }
 
     log(msg) {
