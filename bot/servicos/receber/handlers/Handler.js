@@ -52,11 +52,9 @@ export default class Handler {
      * for disparado, a sua função será executada.
      * @param {String} tipo_evento Nome do evento que se deseja saber quando é disparado
      * @param {function(GatewayMensagem):void} funcao_executar Sua função de callback que será chamada, passando como parametro oque foi recebido no disparo
-     * @returns {Number} - Retorna o ID do handler gerado
+     * @returns {Handler_Info} - Retorna um objeto contendo o evento que foi cadastrado e o ID unico desse handler
      */
     add_handler(tipo_evento, funcao_executar) {
-        this.#log(`Adicionando novo handler do tipo: ${tipo_evento}`)
-
         // Verifica se já não existe um handler cadastrado para esse tipo de evento
         let handler_evento = this.#handlers_eventos.find(handler => {
             if (handler.get_evento_tipo() == tipo_evento) {
@@ -79,29 +77,27 @@ export default class Handler {
             this.#handlers_eventos.push(handler_evento)
         }
 
-        return id_handler_gerado
+        return new Handler_Info(tipo_evento, id_handler_gerado)
     }
 
     /**
      * Remove um handler de algum evento já cadastrado
-     * @param {String} tipo_evento Nome do evento em que se deseja remover
-     * @param {Number} handler_id ID atribuido para remover, esse ID é devolvido na hora de adicionar o handler
+     * @param {Handler_Info} handler_info O objeto handler 
      */
-    remove_handler(tipo_evento, handler_id) {
+    remove_handler(handler_info) {
         let handler_evento = this.#handlers_eventos.find(handler => {
-            if (handler.get_evento_tipo() == tipo_evento) {
+            if (handler.get_evento_tipo() == handler_info.evento) {
                 return true;
             }
         })
 
         if (handler_evento != undefined) {
-            this.#log(`Removendo handler ID ${handler_id} do evento ${tipo_evento}`)
-            handler_evento.remove_handler(handler_id)
+            this.#log(`Removendo handler ID ${handler_info.id_handler} do evento ${handler_info.evento}`)
+            handler_evento.remove_handler(handler_info.id_handler)
         } else {
-            this.#log(`Erro ao remover handler: Não existe o ID ${handler_id} no evento ${tipo_evento}`)
+            this.#log(`Erro ao remover handler: Não existe o ID ${handler_info.id_handler} no evento ${handler_info.evento}`)
         }
     }
-
 
     /**
      * Notifica o Handler para disparar esse evento, fazendo com que todos os handlers cadastrados com esse evento
@@ -158,5 +154,28 @@ export default class Handler {
             console.log(msg);
             console.log("-------------------------------------------------------");
         }
+    }
+}
+
+export class Handler_Info {
+    /**
+     * Tipo do evento que esse handler pertence
+     * @type {String}
+     */
+    evento;
+
+    /**
+     * ID unico do handler que é gerado quando ele é criado.
+     */
+    id_handler;
+
+    /**
+     * Inicia um objeto handler que contem informações de um handler cadastrado
+     * @param {String} evento 
+     * @param {Number} id 
+     */
+    constructor(evento, id) {
+        this.evento = evento
+        this.id_handler = id
     }
 }

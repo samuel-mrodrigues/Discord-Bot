@@ -236,7 +236,7 @@ export class Bot {
         this.#bot_conexao_status.sequencia = seq_recebida
         this.#log(`Processando Evento: ${nome_evento}, sequencia: ${seq_recebida}`)
         switch (nome_evento) {
-            case EVENTOS.INTERNO.RESUMED:
+            case EVENTOS.INTERNO.READY:
                 let dados_sessao = gateway_msg.get_data()
                 this.#evento_bot_autorizado(dados_sessao)
                 break;

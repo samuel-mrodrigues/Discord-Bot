@@ -37,10 +37,10 @@ export default class Enviar {
     get_rest_url() {
         return this.#rest_api_url
     }
-    
+
     /**
      * Envia uma requisição para o endpoint do Discord
-     * @param {{tipo: 'POST' | 'GET', endpoint_nome: string, headers: {'NomeHeader': 'ValorHeader'}, data: {chave: valor},  propriedades: import("axios").AxiosRequestConfig}} parametros_requisição
+     * @param {{tipo: 'POST' | 'GET', endpoint_nome: string, data: {chave: valor},  propriedades: import("axios").AxiosRequestConfig}} parametros_requisição
      * @returns {{sucesso: boolean, requisicao: import("axios").AxiosResponse, erro: {}}}
      */
     async enviar_requisicao(parametros_requisição) {
@@ -62,22 +62,22 @@ export default class Enviar {
             return requisicao_info;
         }
 
-        // Adiciona headers necessarios, como de autorização por exemplo.
-        parametros_requisição.headers = this.#adicionar_headers_bot(parametros_requisição.headers)
-
         let url = `https://${this.#rest_api_url}/${parametros_requisição.endpoint_nome}`
         let data = parametros_requisição.data
-        let headers = parametros_requisição.headers
+        let propriedades = parametros_requisição.propriedades;
+        if (propriedades == undefined) {
+            propriedades = {
+                headers: {}
+            }
+        }
+
+        propriedades.headers = this.#adicionar_headers_bot(propriedades.headers)
         this.log(`Enviando solicitação ${parametros_requisição.tipo} ${url}`)
         try {
             if (parametros_requisição.tipo == "POST") {
-                requisicao_info.requisicao = await Axios.post(url, data, {
-                    'headers': headers
-                })
+                requisicao_info.requisicao = await Axios.post(url, data, propriedades)
             } else {
-                requisicao_info.requisicao = await Axios.get(url, {
-                    'headers': headers
-                })
+                requisicao_info.requisicao = await Axios.get(url, propriedades)
             }
             requisicao_info.sucesso = true
         } catch (erro) {
@@ -99,7 +99,6 @@ export default class Enviar {
 
         if (headers_atuais == null) {
             headers_atuais = autorizacao;
-
         } else {
             Object.assign(headers_atuais, autorizacao)
         }

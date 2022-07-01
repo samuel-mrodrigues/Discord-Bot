@@ -1,9 +1,17 @@
+import { EVENTOS } from "../../../eventos/eventos.js";
+import { Handler_Info } from "../../../servicos/receber/handlers/Handler.js";
 import Grupos from "../Grupos.js";
+import Canais from "./canais/Canais.js";
 
 // Campos que normalmente cada grupo possui
 import Grupo_Campo from "./Grupo_Campo.js";
 
 export default class Grupo {
+    /**
+     * A instancia do Grupos, que guarda é responsavel por armazenar esse grup
+     * @type {Grupos}
+     */
+    #grupo_manager;
 
     /**
      * Armazena todas as informações do grupo
@@ -12,10 +20,17 @@ export default class Grupo {
     #grupo_dados;
 
     /**
-     * A instancia do Grupos, que guarda é responsavel por armazenar esse grup
-     * @type {Grupos}
+     * Canais pertencentes desse grupo
+     * @type {Canais}
      */
-    #grupo_manager;
+    #canais;
+
+    /**
+     * Os handlers são eventos que são chamados pelo serviço de receber eventos
+     * Nesse caso, eu vou salvar ids dos handlers desse grupo, do que for preciso.
+     * @type {[Handler_Info]}
+     */
+    #handlers = []
 
     /**
      * Instancia o grupo com um objeto do grupo, recebido do Discord pelo gateway
@@ -26,7 +41,9 @@ export default class Grupo {
         this.#grupo_manager = grupo_manager
         this.#grupo_dados = grupo_data
 
-        this.#cadastrar_handlers()
+        this.#canais = new Canais(this)
+
+        this.cadastrar_handlers()
     }
 
     /**
@@ -35,6 +52,14 @@ export default class Grupo {
      */
     get_grupo_dados() {
         return this.#grupo_dados
+    }
+
+    /**
+     * Retorna o objeto canais que guarda todos os canais pertencetes desse grupo
+     * @returns {Canais}
+     */
+    get_canais_manager() {
+        return this.#canais
     }
 
     /**
@@ -49,7 +74,16 @@ export default class Grupo {
      * Castrar os listener que tem haver com o grupo, para mante-lo atualizado
      * Como membros novos, expulsoes, banimentos, etc...
      */
-    #cadastrar_handlers() {
+    cadastrar_handlers() {
+
 
     }
+
+    /**
+     * Excluir todos os handlers vinculados a esse grupo
+     */
+    excluir_handlers() {
+
+    }
+
 }

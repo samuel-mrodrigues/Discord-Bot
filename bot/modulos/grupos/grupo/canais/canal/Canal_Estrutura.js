@@ -1,0 +1,31 @@
+const CANAL_CAMPOS = {
+    id: 0,
+    type: 0,
+    guild_id: 0,
+    position: 0,
+    permission_overwrites: 0,
+    name: "",
+    topic: "",
+    nsfw: false,
+    last_message_id: "int",
+    bitrate: 0,
+    user_limit: 0,
+    rate_limit_per_user: 0,
+    recipients: {},
+    icon: "",
+    owner_id: 0,
+    application_id: 0,
+    parent_id: 0,
+    last_pin_timestamp: {},
+    rtc_region: "",
+    video_quality_mode: 0,
+    message_count: 0,
+    member_count: 0,
+    thread_metadata: 0,
+    member: {},
+    default_auto_archive_duration: 0,
+    permissions: "",
+    flags: ""
+}
+
+export default CANAL_CAMPOS

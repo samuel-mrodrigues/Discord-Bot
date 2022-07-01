@@ -1,4 +1,5 @@
 import { EVENTOS } from "../../eventos/eventos.js";
+import { Handler_Info } from "../../servicos/receber/handlers/Handler.js";
 import ModulosManager from "../Modulos.js";
 import Grupo from "./grupo/Grupo.js";
 
@@ -23,13 +24,19 @@ export default class Grupos {
     #grupos_cadastrados = []
 
     /**
+     * Os handlers são eventos que são chamados pelo serviço de receber eventos
+     * @type {[Handler_Info]}
+     */
+    #handlers = []
+
+    /**
      * Inicia o modulo de grupos vinculado a um modulo
      * @param {ModulosManager} modulo 
      */
     constructor(modulo) {
         this.#modulo = modulo
 
-        this.#cadastrar_handler()
+        this.cadastrar_handlers()
     }
 
     /**
@@ -49,18 +56,46 @@ export default class Grupos {
     }
 
     /**
+     * Retorna um objeto Grupo
+     * @param {String} id O ID do grupo
+     * @returns {Grupo}
+     */
+    get_grupo_por_id(id) {
+        let grupo_procurado = this.#grupos_cadastrados.find(grupo => {
+            if (grupo.get_grupo_dados().id == id) {
+                return true
+            }
+        })
+
+        if (grupo_procurado != undefined) {
+            return grupo_procurado
+        }
+    }
+
+    /**
      * Realiza o cadastro do handler que recebe os eventos de grupo
      */
-    #cadastrar_handler() {
+    cadastrar_handlers() {
         let gerenciador_handler = this.#modulo.get_bot().get_handlers();
 
         // Cadastrar um handler para receber o GUILD_CREATE, que é recebido no inicio da conexão do BOT
-        gerenciador_handler.add_handler(EVENTOS.GUILDS.GUILD_CREATE, (guild_dados) => {
-
+        let handler_criar_grupo = gerenciador_handler.add_handler(EVENTOS.GUILDS.GUILD_CREATE, (guild_dados) => {
             let novo_grupo = new Grupo(this, guild_dados.get_data())
 
             this.#grupos_cadastrados.push(novo_grupo)
         })
+
+        this.#handlers.push(handler_criar_grupo)
+    }
+
+    /**
+     * Excluir todos os handlers cadastrados 
+     */
+    excluir_handlers() {
+        let gerenciador_handler = this.#modulo.get_bot().get_handlers();
+        for (const handler_cadastrado of this.#handlers) {
+            gerenciador_handler.remove_handler(handler_cadastrado)
+        }
     }
 
     log(msg) {
