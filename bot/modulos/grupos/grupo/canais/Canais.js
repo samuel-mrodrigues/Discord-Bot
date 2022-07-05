@@ -3,9 +3,9 @@ import { Handler_Info } from "../../../../servicos/receber/handlers/Handler.js";
 import Grupo from "../Grupo.js";
 import Canal from "./canal/Canal.js";
 
-import CANAL_CAMPOS from "./canal/Canal_Estrutura.js"
+import { Canal_Estrutura } from "./canal/Canal_Estrutura.js"
 /**
- * Representa um aglomerado de canais pertencentes a um unico grupo
+ * A classe de Canais guarda todas as informações de canais sobre um grupo
  */
 export default class Canais {
 
@@ -44,7 +44,7 @@ export default class Canais {
 
     /**
      * Adiciona um novo canal a lista 
-     * @param {CANAL_CAMPOS} canal_objeto 
+     * @param {Canal_Estrutura} canal_objeto 
      */
     #adicionar_canal(canal_objeto) {
         let novo_canal = new Canal(this, canal_objeto)
@@ -54,11 +54,11 @@ export default class Canais {
 
     /**
      * Exclui algum canal da lista de canais existentes
-     * @param {CANAL_CAMPOS} canal_objeto 
+     * @param {number} canal_id
      */
-    #remove_canal(canal_objeto) {
+    #remove_canal(id) {
         this.#lista_canais = this.#lista_canais.filter(canal => {
-            if (canal.get_dados().id == canal_objeto.id) {
+            if (canal.get_dados().id == id) {
 
                 // Remove handlers que possam existir desse canal
                 canal.excluir_handlers()

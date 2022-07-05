@@ -1,15 +1,38 @@
+/**
+ * Um objeto video para aparecer no conteudo embed
+ */
 export class EmbedVideo {
-    #url
-    #proxy_url
-    #height
-    #width
+
+    /**
+     * URL do video
+     * @type {string}
+     */
+    url
+
+    /**
+     * URL Proxy do video
+     * @type {string}
+     */
+    proxy_url
+
+    /**
+     * Altura do video
+     * @type {number}
+     */
+    height
+
+    /**
+     * Largura do video
+     * @type {number}
+     */
+    width
 
     /**
      * Define o URL do video
      * @param {String} url 
      */
     setURL(url) {
-        this.#url = url
+        this.url = url
         return this
     }
 
@@ -18,7 +41,7 @@ export class EmbedVideo {
      * @param {String} url 
      */
     setProxyURL(url) {
-        this.#proxy_url = url
+        this.proxy_url = url
         return this
     }
 
@@ -27,7 +50,7 @@ export class EmbedVideo {
      * @param {Number} tamanho 
      */
     setHeight(tamanho) {
-        this.#height = tamanho
+        this.height = tamanho
         return this
     }
 
@@ -36,7 +59,7 @@ export class EmbedVideo {
      * @param {Number} tamanho 
      */
     setWidth(tamanho) {
-        this.#width = tamanho
+        this.width = tamanho
         return this
     }
 }

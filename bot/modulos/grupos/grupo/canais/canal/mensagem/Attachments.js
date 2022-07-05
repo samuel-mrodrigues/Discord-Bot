@@ -1,39 +1,40 @@
-export class Attachments {
-    #id
-    #filename
-    #description
-    #content_type
-    #size
-    #url
-    #proxy_url
-    #heigth
-    #width
-    #ephemeral
+export class Attachment {
+    id
+    filename
+    description
+    content_type
+    size
+    url
+    proxy_url
+    heigth
+    width
+    ephemeral
 
     /**
      * ID do Attachment
-     * @param {Number} id 
+     * @param {number} id 
      */
     setId(id) {
-        this.#id = id
+        this.id = id
         return this
     }
 
+
     /**
      * Define o nome do arquivo anexado
-     * @param {String} nome 
+     * @param {string} nome 
      */
-    setNomeArquivo(nome) {
-        this.#filename = nome
+    setFileName(nome) {
+        this.filename = nome
         return this
     }
 
     /**
      * Define a descrição do arquivo
-     * @param {String} descricao 
+     * @param {string} descricao 
      */
-    setDescricao(descricao) {
-        this.#description = descricao
+    setDescription(descricao) {
+        this.description = descricao
         return this
     }
 
@@ -69,54 +70,54 @@ export class Attachments {
         @description text/html
         @description text/xml
      */
-    setTipoConteudo(tipo) {
-        this.#content_type = tipo
+    setContentType(tipo) {
+        this.content_type = tipo
         return this
     }
 
     /**
      * Define o tamanho em bytes do arquivo
-     * @param {Number} bytes 
+     * @param {number} bytes 
      */
-    setTamanho(bytes) {
-        this.#size = bytes
+    setSize(bytes) {
+        this.size = bytes
         return this
     }
 
     /**
      * Define o URL do arquivo de origem
-     * @param {String} url 
+     * @param {string} url 
      * @returns 
      */
     setURL(url) {
-        this.#url = url
+        this.url = url
         return this
     }
 
     /**
      * Define o URL Proxy do arquivo de origem
-     * @param {String} url 
+     * @param {string} url 
      */
     setProxyURL(url) {
-        this.#proxy_url = url
+        this.proxy_url = url
         return this
     }
 
     /**
      * Define o tamanho Height da imagem(se o arquivo for imagem)
-     * @param {Number} tamanho 
+     * @param {number} tamanho 
      */
     setHeigth(tamanho) {
-        this.#heigth = tamanho
+        this.heigth = tamanho
         return this
     }
 
     /**
      * Define o tamanho WIdth da imagem(se o arquivo for imagem)
-     * @param {Number} tamanho 
+     * @param {number} tamanho 
      */
     setWidth(tamanho) {
-        this.#width = tamanho
+        this.width = tamanho
         return this
     }
 
@@ -124,10 +125,10 @@ export class Attachments {
      * Define se esse attachment será ephemeral ou não
      * @description Ephemeral attachments will automatically be removed after a set period of time. 
      * @description Ephemeral attachments on messages are guaranteed to be available as long as the message itself exists.
-     * @param {Boolean} bool 
+     * @param {boolean} bool 
      */
     setEphemeral(bool) {
-        this.#ephemeral = bool
+        this.ephemeral = bool
         return this
     }
 }

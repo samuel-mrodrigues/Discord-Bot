@@ -1,144 +1,120 @@
 import { MencaoPermitida } from "./MencaoPermitida.js"
+import { ComponenteActionRow, ComponenteButton, ComponenteSelectMenu, ComponenteSelectMenuOpcao } from "./componente/Componente.js"
 import { Reply } from "./Reply.js"
-import { Componente } from "./Componente.js"
 import { Attachments } from "./Attachments.js"
 import { Embed } from "./embed/Embed.js"
+import { Arquivos } from "./files/Files.js"
 
+
+/**
+ * Uma classe contendo informações da mensagem que será enviada
+ * Essa classe contem embutido todas as propriedades para mandar variados tipos de mensagens
+ */
 export class MensagemEnviar {
-
     /**
-     * Texto da mensagem por exemplo
+     * Texto da mensagem que será exibido
      * @type {String}
      */
-    #conteudo
+    content
 
     /**
      * Enviar mensagem como TTS?
      * @type {Boolean}
      */
-    #tts = false
+    tts = false
 
     /**
-     * Lista de objetos embds
+     ** Lista de objetos embeds 
+     ** Um objeto Embed é uma caixinha contendo varias informações, como titulo, imagens, descrição, headers, footers, etc..
      * @type {[Embed]}
      */
-    #embeds = []
+    embeds = []
 
     /**
-     * Lista de menções permitidas na mensagem
+     * Objeto MencaoPermitida, que controla quem poderá ser marcado nessa mensagem
+     ** Apenas ignore essa propriedade se vc quiser o comportamento normal de mencionar qualquer usuario ou cargo
      * @type {MencaoPermitida}
      */
-    #allowed_mentions
+    allowed_mentions
 
     /**
      * Objeto para responder a uma mensagem
      * Só inclua caso queira que a mensagem seja considerada uma resposta a outra mensagem
      * @type {Reply}
      */
-    #message_reference
+    message_reference
 
     /**
      * Lista de Componentes interativos da mensagem
-     * @type {[Componente]}
+     * A lista de componentes disponiveis se encontram em /componente a partir do diretorio desse arquivo
+     * @type {[ComponenteActionRow | ComponenteButton | ComponenteSelectMenu]}
      */
-    #components = []
+    components = []
 
     /**
      * IDs de Stickers do servidor
      * @type {[Number]}
      */
-    #sticker_ids = []
+    sticker_ids = []
 
     /**
-     * ?????
-     * @type {String}
+     * Inclui arquivos para enviar junto a mensagem
+     * @type {Arquivos}
      */
-    #files
+    files
 
     /**
      * String codificada em JSON contendo parametros não pertencentes a arquivos, somente para requisições multipart/form-data
      * @type {String}
      */
-    #payload_json
+    payload_json
 
     /**
      * Lista de attachments para incluir na mensagem
      * @type {[Attachments]}
      */
-    #attachments = []
+    attachments = []
 
     /**
      * Seta as flags da mensagem
      * @type {Number}
      */
-    #flags
+    flags
 
     /**
      * Define o conteudo da mensagem
      * @param {string} msg 
      */
-    setConteudo(msg) {
-        this.#conteudo = msg
+    setContent(msg) {
+        this.content = msg
         return this
-    }
-
-    /**
-     * Retorna o conteudo da mensagem
-     * @returns {String}
-     */
-    getConteudo() {
-        return this.#conteudo
     }
 
     /**
      * Enviar mensagem no modo TTS?
      * @param {boolean} bool 
      */
-    ativaTTS(bool) {
-        this.#tts = bool
+    setTTS(bool) {
+        this.tts = bool
         return this
     }
 
     /**
-     * Retorna se a mensagem é modo TTS
-     * @returns {Boolean}
-     */
-    getTTS() {
-        return this.#tts
-    }
-
-    /**
-     * Propriedades do objeto Embed
-     * @param {[Embed]} embed_objeto 
-     */
+    * Propriedades do objeto Embed
+    * @param {[Embed]} embed_objeto 
+    */
     setEmbeds(embed_objeto) {
-        this.#embeds = embed_objeto
+        this.embeds = embed_objeto
         return this
-    }
-
-    /**
-     * Retorna os objetos Embeds da mensagem
-     * @returns {[Embed]}
-     */
-    getEmbeds() {
-        return this.#embeds
     }
 
     /**
      * Define as menções permitidas da mensagem
      * @param {MencaoPermitida} mencao_objeto
      */
-    setMencoesPermitida(mencao_objeto) {
-        this.#allowed_mentions = mencao_objeto
+    setAllowedMentions(mencao_objeto) {
+        this.allowed_mentions = mencao_objeto
         return this
-    }
-
-    /**
-     * Retorna o objeto Menções, que mostra pra quem é permitido as menções
-     * @returns {MencaoPermitida}
-     */
-    getMencoesPermitidas() {
-        return this.#message_reference
     }
 
     /**
@@ -146,34 +122,30 @@ export class MensagemEnviar {
      * @param {Reply} msgref_objeto 
      * @returns 
      */
-    setMensagemReferencia(msgref_objeto) {
-        this.#message_reference = msgref_objeto
+    setMessageReference(msgref_objeto) {
+        this.message_reference = msgref_objeto
         return this
-    }
-
-    /**
-     * Retorna o objeto Reply, que é uma resposta a uma mensagem
-     * @returns {Reply}
-     */
-    getMensagemReferencia() {
-        return this.#message_reference
     }
 
     /**
      * Define uma lista de componentes para serem utilizados na mensagem
      * @param {[Componente]} param0 
      */
-    setComponentes(componentes) {
-        this.#components = componentes
+    setComponents(componentes) {
+        this.components = componentes
         return this
     }
 
     /**
-     * Retorna os componentes de interações vinculado a essa mensagem
-     * @returns {[Componente]}
+     * Converte todos os objetos de componentes em JSON
      */
-    getComponentes() {
-        return this.#components
+    componentesToJSON() {
+        let comps = []
+        for (const componente of this.components) {
+            comps.push(componente.toJSON())
+        }
+
+        return comps
     }
 
     /**
@@ -181,16 +153,17 @@ export class MensagemEnviar {
      * @param {[Number]} ids 
      */
     setStickersID(ids) {
-        this.#sticker_ids = ids
+        this.sticker_ids = ids
         return this
     }
 
     /**
-     * Retorna uma lista de IDs com os emojis selecionados
-     * @returns {[Number]}
+     * 
+     * @param {Arquivos} arquivo_objeto
      */
-    getStickersIDs() {
-        return this.#sticker_ids
+    setFiles(arquivo_objeto) {
+        this.files = arquivo_objeto
+        return this
     }
 
     /**
@@ -198,16 +171,8 @@ export class MensagemEnviar {
      * @param {String} payload 
      */
     setPayloadJSON(payload) {
-        this.#payload_json = payload
+        this.payload_json = payload
         return this
-    }
-
-    /**
-     * Retorna o payload JSON codificado em String
-     * @returns {String}
-     */
-    getPayloadJSON() {
-        return this.#payload_json
     }
 
     /**
@@ -216,37 +181,38 @@ export class MensagemEnviar {
      * @returns 
      */
     setAttachments(lista_attachments) {
-        this.#attachments = lista_attachments
+        this.attachments = lista_attachments
         return this
     }
+}
 
-    /**
-     * Retorna uma lista de attachments vinculados a mensagem
-     * @returns {[Attachments]}
-     */
-    getAttachments() {
-        return this.#attachments
-    }
-
-    /**
-     * Retorna uma string contendo as informações da mensagem
-     */
-    toString() {
-        let str = ""
-
-        str += `Content: ${this.#conteudo} \n`
-        str += `TTS?: ${this.#tts} \n`
-        str += `Embeds: ${this.#embeds} \n`
-        str += `Allowed Mentions: ${this.#allowed_mentions} \n`
-        str += `Message_Refenrece: ${this.#message_reference} \n`
-        str += `Components: ${this.#components} \n`
-        str += `Sticker IDs: ${this.#sticker_ids} \n`
-        str += `Files: ${this.#files} \n`
-        str += `Payload JSON: ${this.#payload_json} \n`
-        str += `Attachments: ${this.#attachments} \n`
-        str += `Flags: ${this.#flags} \n`
-
-        return str
-    }
-
+/**
+ * Classe contendo os possiveis campos que o Discord retorna quando uma mensagem é enviada
+ */
+export const Mensagem_Retorno = {
+    id: '',
+    type: 0,
+    content: '',
+    channel_id: '',
+    author: {
+        id: '',
+        username: '',
+        avatar: null,
+        avatar_decoration: null,
+        discriminator: '',
+        public_flags: 0,
+        bot: true
+    },
+    attachments: [],
+    embeds: [],
+    mentions: [],
+    mention_roles: [],
+    pinned: false,
+    mention_everyone: false,
+    tts: false,
+    timestamp: '',
+    edited_timestamp: null,
+    flags: 0,
+    components: [],
+    referenced_message: null
 }

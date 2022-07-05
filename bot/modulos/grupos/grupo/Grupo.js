@@ -4,8 +4,13 @@ import Grupos from "../Grupos.js";
 import Canais from "./canais/Canais.js";
 
 // Campos que normalmente cada grupo possui
-import Grupo_Campo from "./Grupo_Campo.js";
+import Grupo_Campo from "./Grupo_Estrutura.js";
 
+/**
+ * Essa classe representa um Grupo em que o BOT se encontra
+ * A partir dessa classe, é possivel fazer basicamente tudo, visualizar, excluir, alterar mensagens, permissões, grupos, etc...
+ * Tudo claro dependendo do nível de permissão do BOT
+ */
 export default class Grupo {
     /**
      * A instancia do Grupos, que guarda é responsavel por armazenar esse grup

@@ -1,15 +1,38 @@
+
+/**
+ * Informações de Autor do embed
+ */
 export class EmbedAuthor {
-    #nome
-    #url
-    #icon_url
-    #proxy_icon_url
+    /**
+     * Nome do autor
+     * @type {string}
+     */
+    name
+
+    /**
+     * URL do autor
+     * @type {string}
+     */
+    url
+
+    /**
+     * URL do icone do autor
+     * @type {string}
+     */
+    icon_url
+
+    /**
+     * URL Proxy do icone do autor
+     * @type {string}
+     */
+    proxy_icon_url
 
     /**
      * Define o nome do autor
      * @param {String} nome 
      */
     setNome(nome) {
-        this.#nome = nome
+        this.name = nome
         return this
     }
 
@@ -18,7 +41,7 @@ export class EmbedAuthor {
      * @param {String} url 
      */
     setURL(url) {
-        this.#url = url
+        this.url = url
         return this
     }
 
@@ -27,7 +50,7 @@ export class EmbedAuthor {
      * @param {String} nome 
      */
     setIconURL(url) {
-        this.#icon_url = url
+        this.icon_url = url
         return this
     }
 
@@ -36,7 +59,7 @@ export class EmbedAuthor {
      * @param {String} url 
      */
     setProxyIronURL(url) {
-        this.#proxy_icon_url
+        this.proxy_icon_url = url
         return this
     }
 }

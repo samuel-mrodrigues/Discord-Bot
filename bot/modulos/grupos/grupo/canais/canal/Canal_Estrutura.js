@@ -1,4 +1,4 @@
-const CANAL_CAMPOS = {
+export const Canal_Estrutura = {
     id: 0,
     type: 0,
     guild_id: 0,
@@ -27,5 +27,3 @@ const CANAL_CAMPOS = {
     permissions: "",
     flags: ""
 }
-
-export default CANAL_CAMPOS

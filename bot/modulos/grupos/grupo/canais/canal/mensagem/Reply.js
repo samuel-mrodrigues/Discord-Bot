@@ -1,33 +1,31 @@
+/**
+ * Esse objeto representa que a mensagem é uma resposta para outra mensagem
+ */
 export class Reply {
-    #mensagem_id
-    #channel_id
-    #guild_id
-    #fail_if_not_exists
+    /**
+     * ID da mensagem para responder/foi respondida
+     * @type {string}
+     */
+    message_id
 
     /**
-     * ID da mensagem que se pretende responder
-     * @param {Number} id 
+     * ID do canal
+     ** Essa propriedade não é necessario ao enviar, é somente para receber o evento
+     * @type {string}
      */
-    setMsgId(id) {
-        this.#mensagem_id = id
-        return this
-    }
+    channel_id
 
     /**
-     * ID do canal da mensagem
-     * @param {Number} id 
+     * ID da guilda
+     ** Essa propriedade não é necessario ao enviar, é somente para receber o evento
+     * @type {string}
      */
-    setCanalId(id) {
-        this.#channel_id = id
-        return this
-    }
+    guild_id
 
     /**
-     * ID da guilda da mensagem
-     * @param {Number} id 
+     * True ou false para disparar um erro de retorno caso a mensagem respondida não exista mais. Padrão é true caso não especificado
+     * essa propriedade
+     * @type {boolean}
      */
-    setGuildId(id) {
-        this.#guild_id = id
-        return this
-    }
+    fail_if_not_exists
 }

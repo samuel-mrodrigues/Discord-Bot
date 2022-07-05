@@ -1,3 +1,6 @@
+/**
+ * Estrutura de Grupo que é recebido pelo Discord
+ */
 const GruposCampos = {
     name: '',
     large: false,

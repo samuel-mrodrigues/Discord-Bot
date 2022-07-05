@@ -41,7 +41,7 @@ export default class Enviar {
     /**
      * Envia uma requisição para o endpoint do Discord
      * @param {{tipo: 'POST' | 'GET', endpoint_nome: string, data: {chave: valor},  propriedades: import("axios").AxiosRequestConfig}} parametros_requisição
-     * @returns {{sucesso: boolean, requisicao: import("axios").AxiosResponse, erro: {}}}
+     * @returns {Promise<{sucesso: boolean, requisicao: import("axios").AxiosResponse, erro: {}}>}
      */
     async enviar_requisicao(parametros_requisição) {
         let requisicao_info = {
@@ -82,9 +82,7 @@ export default class Enviar {
             requisicao_info.sucesso = true
         } catch (erro) {
             requisicao_info.sucesso = false
-            requisicao_info.erro = {
-                motivo: erro.response
-            }
+            requisicao_info.erro = erro.response
         }
         return requisicao_info;
     }

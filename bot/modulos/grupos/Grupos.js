@@ -4,6 +4,7 @@ import ModulosManager from "../Modulos.js";
 import Grupo from "./grupo/Grupo.js";
 
 // O Modulo de Grupos trata de receber todos os eventos de grupo, deixando disponivel ao usuario pegar esses grupos e interagir com eles
+// Todos os grupos em que o BOT se encontra, essa classe é responsavel por eles.
 export default class Grupos {
 
     /**

@@ -1,15 +1,39 @@
+/**
+ * Este objeto imagem permite adicionar uma imagem ao conteudo Embed
+ */
 export class EmbedImage {
-    #url
-    #proxy_url
-    #height
-    #width
+    /**
+     * URL da imagem
+     ** Pode ser um URL HTTP(S) ou ID do attachment
+     * @type {string}
+     */
+    url
 
     /**
-     * Define o URL da imagem
-     * @param {String} url 
+     * URL Proxy da imagem
+     ** Pode ser um URL HTTP(S) ou ID do attachment
+    * @type {string}
+    */
+    proxy_url
+
+    /**
+     * Altura da imagem
+     * @type {number}
      */
+    height
+
+    /**
+     * Largura da imagem
+     * @type {number}
+     */
+    width
+
+    /**
+ * Define o URL da imagem
+ * @param {String} url 
+ */
     setURL(url) {
-        this.#url = url
+        this.url = url
         return this
     }
 
@@ -18,7 +42,7 @@ export class EmbedImage {
      * @param {String} url 
      */
     setProxyURL(url) {
-        this.#proxy_url = url
+        this.proxy_url = url
         return this
     }
 
@@ -27,7 +51,7 @@ export class EmbedImage {
      * @param {Number} tamanho 
      */
     setHeight(tamanho) {
-        this.#height = tamanho
+        this.height = tamanho
         return this
     }
 
@@ -36,7 +60,7 @@ export class EmbedImage {
      * @param {Number} tamanho 
      */
     setWidth(tamanho) {
-        this.#width = tamanho
+        this.width = tamanho
         return this
     }
 }

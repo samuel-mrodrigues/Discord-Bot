@@ -1,42 +1,37 @@
+/**
+ * Esse objeto controla quem poderá ser marcado na mensagem
+ */
 export class MencaoPermitida {
-    #parse
-    #roles
-    #users
-    #replied_user
 
     /**
-     * Define os tipos de menções permitidas
-     * @param {['roles' | 'users' | 'everyone']} tipos
+     * Controla a menção de usuarios/cargos da mensagem
+     ** Por padrão, ao usar menções @everyone, @here, etc.. no content da mensagem, a menção será permitida, marcando a pessoa/cargo.
+     ** Ao passar parametros para a propriedade parse, vc estará dizendo qual menção será permitida, se será somente usuario, grupo,
+     * somente um grupo ou todos. Somente as menções dentro do parse será permitido na mensagem
+     * 
+     ** Por exemplo, se voce quiser desabilitar qualquer menção na mensagem, supondo que ela tenha um @everyone,
+     * passe um array vazio parse = [], e essas menções serão ignoradas e enviadas como um simples texto
+     * @type {['roles' | 'users' | 'everyone']} Tipos de menções permitidas - Não inclua essa propriedade caso queira que todas as menções sejam validas
      */
-    setParseMencoesPermitidas(tipos) {
-        this.#parse = tipos
-        return this
-    }
+    parse
 
     /**
-     * Um Array de IDs das roles(cargos) que serão mencionados
-     * @param {[Number]} ids 
+     * Controla quais os cargos que serão permitidos para serem citados na mensagem
+     ** Caso queira que qualquer cargo seja mencionado, apenas ignore essa propriedade
+     * @type {[number]} Um array dos IDs dos cargos daquele grupo
      */
-    setRoles(ids) {
-        this.#roles = ids
-        return this
-    }
+    roles
 
     /**
-     * Um array de IDs dos usuarios que serão mencionados
-     * @param {[Number]} ids 
+     * Controla quais os usuarios que serão permitidos para serem citados na mensagem
+     ** Caso queira que qualquer usuario seja mencionado, apenas ignore essa propriedade
+     * @type {[number]} Um array dos IDs dos usuarios 
      */
-    setUsers(ids) {
-        this.#users = ids
-        return this
-    }
+    users
 
     /**
-     * Para respostas, marcar ou nao o autor da mensagem que foi respondida
-     * @param {Boolean} bool 
+     * Esconder ou não o nome do autor da mensagem respondida
+     * @type {boolean}
      */
-    setMencionarReplyUser(bool) {
-        this.#replied_user = bool
-        return this
-    }
+    replied_user
 }

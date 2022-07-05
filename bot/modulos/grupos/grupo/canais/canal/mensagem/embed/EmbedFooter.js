@@ -1,14 +1,33 @@
+
+/**
+ * Um objeto footer, que ficara localizado ao fim do objeto embed
+ */
 export class EmbedFooter {
-    #text
-    #icon_url
-    #proxy_icon_url
 
     /**
-     * Define o texto do footer
-     * @type {String} texto
+     * Texto do footer
+     * @type {string}
      */
+    text
+
+    /**
+     * URL de algum icone
+     * @type {string}
+     */
+    icon_url
+
+    /**
+     * URL Proxy de algum icone
+     * @type {string}
+     */
+    proxy_icon_url
+
+    /**
+ * Define o texto do footer
+ * @type {String} texto
+ */
     setTexto(texto) {
-        this.#text = texto
+        this.text = texto
         return this
     }
 
@@ -17,7 +36,7 @@ export class EmbedFooter {
      * @param {String} url 
      */
     setIconeURL(url) {
-        this.#icon_url = url
+        this.icon_url = url
         return this
     }
 
@@ -26,7 +45,7 @@ export class EmbedFooter {
      * @param {String} url 
      */
     setProxyIconeURL(url) {
-        this.#proxy_icon_url = url
+        this.proxy_icon_url = url
         return this
     }
 }

@@ -1,13 +1,22 @@
 export class EmbedProvider {
-    #name
-    #url
+    /**
+     * Nome do provedor
+     * @type {string}
+     */
+    name
+
+    /**
+     * URL do provedor
+     * @type {string}
+     */
+    url
 
     /**
      * Define o nome do provedor
      * @param {String} nome 
      */
     setNome(nome) {
-        this.#name = nome
+        this.name = nome
         return this
     }
 
@@ -16,7 +25,7 @@ export class EmbedProvider {
      * @param {String} url 
      */
     setURL(url) {
-        this.#url = url
+        this.url = url
         return this
     }
 }
