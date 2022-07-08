@@ -40,7 +40,7 @@ export class Bot {
      */
     #bot_conexao;
 
-    // Status da conexão WebSocket com o Discord
+    // Status da conexão WebSocket com o Discord!
     #bot_conexao_status = {
         estados: {
             autenticando: false,
