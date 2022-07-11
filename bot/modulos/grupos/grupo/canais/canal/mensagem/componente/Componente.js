@@ -9,7 +9,7 @@ export class ComponenteActionRow {
      * O tipo do ID do componente. ActionRows são o 1
      * @type {number}
      */
-    #type = 1
+    type = 1
 
     /**
      * Contem os outros componentes da mensagem
@@ -19,7 +19,7 @@ export class ComponenteActionRow {
 
     /**
      * Define os componentes que estarão presentes nesse ActionRow
-     * @param {[]} componnetes 
+     * @param {[]} componetes 
      */
     setComponents(componetes) {
         this.components = componetes
@@ -31,26 +31,9 @@ export class ComponenteActionRow {
      * @returns {number}
      */
     getTipo() {
-        return this.#type
+        return this.type
     }
 
-    /**
-     * Retorna um JSON contendo todas as informações desse componente
-     * @returns {{type: number, components: []}}
-     */
-    toJSON() {
-        let comp = []
-        for (const componente of this.components) {
-            comp.push(componente.toJSON())
-        }
-
-        let objeto = {
-            type: this.#type,
-            components: comp
-        }
-
-        return objeto
-    }
 }
 
 /**
@@ -65,7 +48,7 @@ export class ComponenteButton {
      * O tipo do componente, botões são tipo 2
      * @type {number}
      */
-    #type = 2
+    type = 2
 
     /**
      * Estilo do botão
@@ -116,7 +99,7 @@ export class ComponenteButton {
      * @returns {number}
      */
     getTipo() {
-        return this.#type
+        return this.type
     }
 
     /**
@@ -179,22 +162,6 @@ export class ComponenteButton {
         this.disabled = bool
         return this
     }
-
-    /**
-     * Retorna um JSON contendo todas as informações desse componente de botão
-     * @returns {{type: number, style: number, label: string, emoji: ComponenteEmoji, custom_id: string, url: string, disabled: boolean}}
-     */
-    toJSON() {
-        return {
-            type: this.#type,
-            style: this.style,
-            label: this.label,
-            emoji: this.emoji,
-            custom_id: this.custom_id,
-            url: this.url,
-            disabled: this.disabled
-        }
-    }
 }
 
 /**
@@ -209,7 +176,7 @@ export class ComponenteSelectMenu {
      * O tipo do SelectMenu é 3
      * @type {number}
      */
-    #type = 3
+    type = 3
 
     /**
      * O ID custom dessa interação. Esse ID será passado futuramente no evento de interação, quando o usuario interagir com esse componente
@@ -253,7 +220,7 @@ export class ComponenteSelectMenu {
      * @returns {number}
      */
     getTipo() {
-        return this.#type
+        return this.type
     }
 
     /**
@@ -320,7 +287,7 @@ export class ComponenteSelectMenu {
         }
 
         return {
-            type: this.#type,
+            type: this.type,
             custom_id: this.custom_id,
             options: opcoes_json,
             placeholder: this.placeholder,
@@ -410,20 +377,6 @@ export class ComponenteSelectMenuOpcao {
         this.default = bool
         return this
     }
-
-    /**
-     * Retorna em JSON as informações desse componente opção
-     * @returns {{label: string, value: string, description: string, default: boolean, emoji: ComponenteEmoji}}
-     */
-    toJSON() {
-        return {
-            label: this.label,
-            value: this.value,
-            description: this.description,
-            default: this.default,
-            emoji: this.emoji != undefined ? this.emoji.toJSON() : undefined
-        }
-    }
 }
 
 /**
@@ -475,14 +428,4 @@ export class ComponenteEmoji {
         return this
     }
 
-    /**
-     * Retorna em JSON as informações desse componente emoji
-     */
-    toJSON() {
-        return {
-            id: this.id,
-            name: this.name,
-            animated: this.animated
-        }
-    }
 }

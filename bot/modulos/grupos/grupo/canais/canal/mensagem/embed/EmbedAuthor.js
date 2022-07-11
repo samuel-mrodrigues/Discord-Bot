@@ -47,6 +47,7 @@ export class EmbedAuthor {
 
     /**
      * Define o URL do icone
+     * Pode ser um URL ou um attachment que foi incluido na mensagem
      * @param {String} nome 
      */
     setIconURL(url) {

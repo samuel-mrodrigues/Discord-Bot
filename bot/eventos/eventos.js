@@ -4,6 +4,9 @@ export const EVENTOS = {
         READY: "READY",
         RESUMED: "RESUMED"
     },
+    INTERACOES: {
+        INTERACTION_CREATE: "INTERACTION_CREATE"
+    },
     GUILDS: {
         GUILD_CREATE: "GUILD_CREATE",
         GUILD_UPDATE: "GUILD_UPDATE",
@@ -55,7 +58,8 @@ export const EVENTOS = {
     },
     // Evento relacionados a atualização de status de canal de voz
     GUILD_VOICE_STATES: {
-        VOICE_STATE_UPDATE: "VOICE_STATE_UPDATE"
+        VOICE_STATE_UPDATE: "VOICE_STATE_UPDATE",
+        VOICE_SERVER_UPDATE: "VOICE_SERVER_UPDATE"
     },
     // Evento relacionados a presença
     GUILD_PRESENCES: {

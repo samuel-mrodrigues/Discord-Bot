@@ -1,3 +1,6 @@
+/**
+ * Essa class representa um attachment adicionado a lista de attachments
+ */
 export class Attachment {
     id
     filename
@@ -10,14 +13,14 @@ export class Attachment {
     width
     ephemeral
 
-    /**
-     * ID do Attachment
-     * @param {number} id 
-     */
-    setId(id) {
-        this.id = id
-        return this
-    }
+    // /**
+    //  * ID do Attachment
+    //  * @param {number} id 
+    //  */
+    // setId(id) {
+    //     this.id = id
+    //     return this
+    // }
 
 
     /**
@@ -40,9 +43,7 @@ export class Attachment {
 
     /**
      * Define o tipo do conteudo anexado
-     ** É obrigatorio definir um tipo valido para o attachment, se vc não especificar ou especificar o tipo errado, por
-     exemplo, definir como image/png mas o conteudo do attachment for um video, ele não será mostrado corretamente.
-     * @param {string} tipo
+     * @param {'application'|'audio'|'image'|'message'|'multipart'|'text'|'video'} tipo
         @description application/javascript
         @description application/json
         @description application/ld+json

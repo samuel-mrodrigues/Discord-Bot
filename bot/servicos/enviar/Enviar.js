@@ -40,7 +40,7 @@ export default class Enviar {
 
     /**
      * Envia uma requisição para o endpoint do Discord
-     * @param {{tipo: 'POST' | 'GET', endpoint_nome: string, data: {chave: valor},  propriedades: import("axios").AxiosRequestConfig}} parametros_requisição
+     * @param {{tipo: 'POST' | 'GET' | 'PATCH' | 'DELETE', endpoint_nome: string, data: {chave: valor},  propriedades: import("axios").AxiosRequestConfig}} parametros_requisição
      * @returns {Promise<{sucesso: boolean, requisicao: import("axios").AxiosResponse, erro: {}}>}
      */
     async enviar_requisicao(parametros_requisição) {
@@ -57,7 +57,7 @@ export default class Enviar {
 
         let tipo_requisicao = parametros_requisição.tipo.toUpperCase()
 
-        if (tipo_requisicao != "POST" && tipo_requisicao != "GET") {
+        if (tipo_requisicao != "POST" && tipo_requisicao != "GET" && tipo_requisicao != "DELETE" && tipo_requisicao != "PATCH") {
             requisicao_info.erro = "O tipo da requisição deve ser POST ou GET"
             return requisicao_info;
         }
@@ -74,10 +74,23 @@ export default class Enviar {
         propriedades.headers = this.#adicionar_headers_bot(propriedades.headers)
         this.log(`Enviando solicitação ${parametros_requisição.tipo} ${url}`)
         try {
-            if (parametros_requisição.tipo == "POST") {
-                requisicao_info.requisicao = await Axios.post(url, data, propriedades)
-            } else {
-                requisicao_info.requisicao = await Axios.get(url, propriedades)
+
+            switch (parametros_requisição.tipo.toUpperCase()) {
+                case "GET":
+                    requisicao_info.requisicao = await Axios.get(url, propriedades)
+                    break;
+                case "POST":
+                    requisicao_info.requisicao = await Axios.post(url, data, propriedades)
+                    break;
+                case "PATCH":
+                    requisicao_info.requisicao = await Axios.patch(url, data, propriedades)
+                    break;
+                case "DELETE":
+                    requisicao_info.requisicao = await Axios.delete(url, propriedades)
+                    break;
+                default:
+                    requisicao_info.requisicao = {}
+                    break;
             }
             requisicao_info.sucesso = true
         } catch (erro) {

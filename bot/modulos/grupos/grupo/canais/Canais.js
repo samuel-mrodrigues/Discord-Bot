@@ -69,11 +69,6 @@ export default class Canais {
         })
     }
 
-    #atualizar_canal(canal_objeto) {
-        this.#remove_canal(canal_objeto)
-        this.#adicionar_canal(canal_objeto)
-    }
-
     /**
      * Retorna uma lista de canais existentes do grupo
      * @returns {[Canal]}
@@ -123,10 +118,6 @@ export default class Canais {
         // Quando o canal for removido, excluir ele da lista
         this.#handlers.CHANNEL_DELETE = handler_manager.add_handler(EVENTOS.GUILDS.CHANNEL_DELETE, (canalexcluido_info) => {
             this.#remove_canal(canalexcluido_info.get_data())
-        })
-
-        this.#handlers.CHANNEL_UPDATE = handler_manager.add_handler(EVENTOS.GUILDS.CHANNEL_UPDATE, (canalatualizado_info) => {
-            this.#atualizar_canal(canalatualizado_info)
         })
     }
 

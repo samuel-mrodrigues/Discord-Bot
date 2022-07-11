@@ -40,7 +40,7 @@ export class Bot {
      */
     #bot_conexao;
 
-    // Status da conexão WebSocket com o Discord!
+    // Status da conexão WebSocket com o Discord
     #bot_conexao_status = {
         estados: {
             autenticando: false,
@@ -120,6 +120,13 @@ export class Bot {
     }
 
     /**
+     * Retorna o Application ID do BOT
+     */
+    get_application_id() {
+        return this.#bot_conexao_status.informacoes.botuser_id
+    }
+
+    /**
      * Retorna os serviços para interagir com o BOT
      * Modulos fornecem todas as funções necessaria para as interações de texto, voz, administrar usuarios, etc...
      * @returns {Servicos} Servico controlador de envio e recebimento
@@ -142,6 +149,14 @@ export class Bot {
      */
     get_modulos() {
         return this.#modulos
+    }
+
+    /**
+     * Retorna a conexão Websocket que o BOT tem atualmente com o gateway do Discord
+     * @returns {ws.WebSocket} Conexão websocket com o Discord
+     */
+    get_websocket_conexao() {
+        return this.#bot_conexao
     }
 
     /**
@@ -431,6 +446,8 @@ export class Bot {
 
 
         this.#parar_heartbeat()
+        this.#log(`Conexão websocket fechada, motivo:`)
+        this.#log(evento_fechou)
     }
     /**
      * Função executada quando o websocket é aberto com o Discord
@@ -444,6 +461,8 @@ export class Bot {
      * Função chamada quando ocorre um erro de conexão inicial
      */
     #websocket_erro(evento_erro = { error, message, target, type }) {
+        this.#log(`Ocorreu um erro no websocket, motivo:`)
+        this.#log(evento_erro)
     }
     // ----------------------------------------------------
 

@@ -2,6 +2,7 @@ import { EVENTOS } from "../../eventos/eventos.js";
 import { Handler_Info } from "../../servicos/receber/handlers/Handler.js";
 import ModulosManager from "../Modulos.js";
 import Grupo from "./grupo/Grupo.js";
+import { Grupo_Estrutura } from "./grupo/Grupo_Estrutura.js"
 
 // O Modulo de Grupos trata de receber todos os eventos de grupo, deixando disponivel ao usuario pegar esses grupos e interagir com eles
 // Todos os grupos em que o BOT se encontra, essa classe é responsavel por eles.
@@ -74,6 +75,32 @@ export default class Grupos {
     }
 
     /**
+     * Adiciona um novo grupo a lista de grupos em que o BOT se encontra
+     * @param {} grupo_dados 
+     */
+    #adicionar_grupo(grupo_dados) {
+        let novo_grupo = new Grupo(this, grupo_dados)
+
+        this.#grupos_cadastrados.push(novo_grupo)
+    }
+
+    /**
+     * Exclui um grupo da lista de grupos em que o BOT se encontra
+     * @param {number} id 
+     */
+    #remove_grupo(id) {
+
+        this.#grupos_cadastrados = this.#grupos_cadastrados.filter(grupo => {
+            if (grupo.get_grupo_dados().id == id) {
+                grupo.excluir_handlers()
+                return false;
+            } else {
+                return true
+            }
+        })
+    }
+
+    /**
      * Realiza o cadastro do handler que recebe os eventos de grupo
      */
     cadastrar_handlers() {
@@ -81,12 +108,19 @@ export default class Grupos {
 
         // Cadastrar um handler para receber o GUILD_CREATE, que é recebido no inicio da conexão do BOT
         let handler_criar_grupo = gerenciador_handler.add_handler(EVENTOS.GUILDS.GUILD_CREATE, (guild_dados) => {
-            let novo_grupo = new Grupo(this, guild_dados.get_data())
+            let guild_objeto = guild_dados.get_data()
 
-            this.#grupos_cadastrados.push(novo_grupo)
+            this.#adicionar_grupo(guild_objeto)
+        })
+
+        let handler_excluir_grupo = gerenciador_handler.add_handler(EVENTOS.GUILDS.GUILD_DELETE, (guild_dados) => {
+            let grupo_id = guild_dados.get_data().id
+
+            this.#remove_grupo(grupo_id)
         })
 
         this.#handlers.push(handler_criar_grupo)
+        this.#handlers.push(handler_excluir_grupo)
     }
 
     /**

@@ -30,6 +30,7 @@ export class EmbedThumbnail {
 
     /**
      * Define o URL da thumbnail
+     * Pode ser um URL ou um attachment que foi incluido na mensagem
      * @param {String} url 
      */
     setURL(url) {

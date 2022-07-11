@@ -1,7 +1,7 @@
 /**
  * Estrutura de Grupo que é recebido pelo Discord
  */
-const GruposCampos = {
+export const Grupo_Estrutura = {
     name: '',
     large: false,
     system_channel_id: '',
@@ -50,5 +50,3 @@ const GruposCampos = {
     nsfw_level: 0,
     stickers: []
 }
-
-export default GruposCampos

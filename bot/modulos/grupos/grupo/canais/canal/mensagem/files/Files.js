@@ -1,16 +1,9 @@
+import mime_tipos from "mime-types"
 /**
  * Essa classe cuida de salvar todos os documentos que se deseja enviar junto a uma mensagem ao Discord
  * Não é possível enviar anexos sem essa classe auxiliar.
  */
 export class Arquivos {
-
-    /**
-     * O contador unico atual. Cada vez que um novo arquivo é adicionado, esse contador irá incrementar em 1,
-     * fazendo com que cada arquivo sempre tenha um ID unico
-     * @type {number}
-     */
-    id_contador = 0;
-
     /**
      * Mostrar logs?
      */
@@ -23,24 +16,38 @@ export class Arquivos {
     arquivos_adicionados = []
 
     /**
+     * Retorna o arquivo que será utilizado em alguma propriedade(nos embeds na maioria das vezes).
+     ** Essa função só irá retornar arquivos que vc especificou na função setFiles(), se especificar um arquivo que não existe, não sera retornado nada!
+     * @returns {string}
+     */
+    get_arquivo(arquivo_nome) {
+        let existe = this.arquivos_adicionados.find(arquivo => {
+            if (arquivo.nome_arquivo == arquivo_nome) {
+                return true;
+            }
+        })
+
+        if (existe != undefined) {
+            return `attachment://${arquivo_nome}`
+        }
+    }
+
+    /**
      * Adicionar um novo arquivo junto as mensagens
      * @param {string} arquivo_nome O nome do arquivo(esse nome será utilizado para referencia-lo em outras partes da mensagem)
      * @param {Buffer} arquivo_bytes O buffer contendo os bytes da imagem
+     * @param {PropsArquivo} props_arquivo Informações basicas do arquivo
      * @return {Arquivos}
      */
-    add_arquivo(arquivo_nome, arquivo_bytes) {
-
+    add_arquivo(arquivo_nome, arquivo_bytes, props_arquivo) {
         let checa_nome = this.#nomeArquivoOk(arquivo_nome)
 
         if (!checa_nome.valido) {
             throw checa_nome.msg
         }
 
-        let arquivo_objeto = new ArquivoInfo(this.id_contador, arquivo_nome, arquivo_bytes)
-        this.log(`Novo arquivo ${arquivo_nome} adicionado com o ID ${this.id_contador}`);
-
+        let arquivo_objeto = new ArquivoInfo(arquivo_nome, arquivo_bytes, props_arquivo)
         this.arquivos_adicionados.push(arquivo_objeto)
-        this.id_contador++
         return this
     }
 
@@ -87,26 +94,6 @@ export class Arquivos {
             return ok
         }
 
-        let nome_arquivo = nome_ext[0]
-        let extensao = nome_ext[1]
-
-        switch (extensao.toLowerCase()) {
-            case 'png':
-                break;
-            case 'jpeg':
-                break;
-            case 'jpg':
-                break;
-            case 'txt':
-                break;
-            case 'gif':
-                break;
-
-            default:
-                ok.msg = `A extensão ${extensao} não é suportada!`
-                return ok
-        }
-
         ok.valido = true
         return ok
     }
@@ -144,15 +131,22 @@ export class ArquivoInfo {
     dados_buffer;
 
     /**
+     * Informações basicas do arquivo
+     * @type {PropsArquivo}
+     */
+    propriedades;
+
+    /**
      * Constrói um novo arquivo
      * @param {number} id ID unico gerado
      * @param {string} nome Nome do arquivo
      * @param {Buffer} buffer Buffer do arquivo lido
+     * @param {PropsArquivo} props Informações do arquivo
      */
-    constructor(id, nome, buffer) {
-        this.id_unico = id
+    constructor(nome, buffer, props = PropsArquivo) {
         this.nome_arquivo = nome
         this.dados_buffer = buffer
+        this.propriedades = props
 
         this.#define_tipo_conteudo()
     }
@@ -162,24 +156,10 @@ export class ArquivoInfo {
      * Esse tipo MIME é usado na montagem da mensagem
      */
     #define_tipo_conteudo() {
-        if (this.is_imagem()) {
-            this.tipo_conteudo = `image/${this.get_extensao().toLowerCase()}`
-        } else if (this.is_texto()) {
-            this.tipo_conteudo = `text/plain`
-        }
-    }
+        let tipo_conteudo = mime_tipos.lookup(this.nome_arquivo)
 
-    /**
-     * Retorna true se esse arquivo é uma imagem
-     * @returns {boolean}
-     */
-    is_imagem() {
-        let tipo_ext = this.nome_arquivo.split(".")[1].toLowerCase()
-
-        if (tipo_ext == 'png' || tipo_ext == 'jpeg' || tipo_ext == 'svg+xml' || tipo_ext == 'svg' || tipo_ext == 'webp' || tipo_ext == 'gif' || tipo_ext == 'jpg') {
-            return true
-        } else {
-            return false;
+        if (tipo_conteudo != false) {
+            this.tipo_conteudo = tipo_conteudo
         }
     }
 
@@ -190,41 +170,32 @@ export class ArquivoInfo {
     get_extensao() {
         return this.nome_arquivo.split(".")[1]
     }
-
-    /**
-     * Retorna true se esse arquivo é um arquivo de texto 
-     * @returns {boolean}
-     */
-    is_texto() {
-        let tipo_ext = this.nome_arquivo.split(".")[1].toLowerCase()
-
-        if (tipo_ext == 'txt') {
-            return true
-        } else {
-            return false;
-        }
-    }
 }
 
 /**
- * Representa um anexo que se deseje usar em alguma parte da mensagem
- * 
+ * Propriedades de um arquivo file sendo adicionado
  */
-export class ArquivoAnexo {
+export const PropsArquivo = {
     /**
-     * Nome do arquivo que se deseja anexar nessa propriedade
+     * Descrição do arquivo
      * @type {string}
      */
-    nome_arquivo
+    descricao: undefined,
+    /**
+     * Se o arquivo for uma imagem, é possivel definir o heigth
+     * @type {number}
+     */
+    heigth: undefined,
+    /**
+     * Se o arquivo for uma imagem, é possivel definir o width
+     * @type {number}
+     */
+    width: undefined,
 
     /**
-     * Nome do arquivo para usar como anexo, pode ser texto, imagem, video..
-     * Lembrando que esse nome deve ser IDENTICO ao nome que foi usado para adicionar o arquivo na classe de adicionar arquivos,
-     * caso contrario, nada será adicionado
-     * @type {string}
+     * Vincula a imagem a mensagem, enquanto a mensagem existir, esse arquivo não será excluido futuramente.
+     ** Caso a mensagem seja excluida, o Discord irá automaticamente deletar após um determinado tempo.
+     ** Desative para manter o arquivo sem dependencia com a mensagem
      */
-    constructor(nome) {
-        this.nome_arquivo = nome
-    }
+    vincular_a_mensagem: true
 }
-

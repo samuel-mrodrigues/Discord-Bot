@@ -107,7 +107,6 @@ export default class Handler {
      */
     disparar_evento(evento_tipo, gateway_mensagem) {
         // Encontra o handler desse evento previamente cadastrado
-
         let evento_handler = this.#handlers_eventos.find(handler => {
             if (handler.get_evento_tipo() == evento_tipo) {
                 return true;

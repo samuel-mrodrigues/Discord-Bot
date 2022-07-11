@@ -29,6 +29,7 @@ export class EmbedVideo {
 
     /**
      * Define o URL do video
+     * Pode ser um URL ou um attachment que foi incluido na mensagem
      * @param {String} url 
      */
     setURL(url) {
